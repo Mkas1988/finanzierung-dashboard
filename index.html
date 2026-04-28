@@ -38,6 +38,7 @@
         <p>DHH 118 m² | Kaufpreis 425.000 € + 150.000 € Modernisierung | Kapitalbedarf 627.000 €</p>
     </div>
     <div class="app-actions">
+        <button id="btnSync" title="Auto-Sync zwischen Geräten via privatem GitHub-Gist">☁ <span id="syncLabel">Sync aus</span></button>
         <button id="btnExport" title="Alle Daten als JSON-Datei herunterladen">⬇ Export</button>
         <button id="btnImport" title="Backup-Datei importieren (überschreibt alle Daten)">⬆ Import</button>
         <button id="btnReset"  title="Alle Werte auf die Standard-Defaults zurücksetzen">↺ Reset</button>
@@ -45,6 +46,47 @@
             <span style="font-weight:700;">Eigentum seit 2025</span> · Stand: April 2026
         </span>
     </div>
+
+<!-- Sync Setup Overlay -->
+<div class="overlay" id="syncOverlay">
+    <div class="overlay-box" style="max-width:520px;">
+        <button class="overlay-close" onclick="document.getElementById('syncOverlay').classList.remove('open')">&times;</button>
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">☁ Auto-Sync via GitHub-Gist</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Synchronisiert deine Eingaben (Werte, Umbau-Maßnahmen, Slider) zwischen Geräten über einen privaten Gist. Der Token bleibt nur in deinem Browser.</p>
+
+        <div id="syncSetup" style="display:none;">
+            <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:12px;font-size:12px;margin-bottom:14px;">
+                <strong>Personal Access Token erstellen</strong><br>
+                <ol style="margin:8px 0 4px 18px;padding:0;line-height:1.6;">
+                    <li>Öffne <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:var(--blue);">github.com/settings/tokens</a> (Fine-grained reicht)</li>
+                    <li>Token erstellen: nur Scope <strong>"gist"</strong> (kein Repo-Zugriff!)</li>
+                    <li>Ablaufdatum nach Wunsch (z.B. 90 Tage), Token kopieren und unten einfügen</li>
+                </ol>
+            </div>
+            <div class="um-field">
+                <label>GitHub Personal Access Token</label>
+                <input type="password" id="syncToken" placeholder="ghp_… oder github_pat_…" autocomplete="off">
+            </div>
+            <div id="syncErr" style="color:var(--red);font-size:12px;margin-bottom:10px;display:none;"></div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;">
+                <button class="um-btn" onclick="document.getElementById('syncOverlay').classList.remove('open')">Abbrechen</button>
+                <button class="um-btn um-btn-primary" id="syncConnectBtn">Verbinden</button>
+            </div>
+        </div>
+
+        <div id="syncConnected" style="display:none;">
+            <div style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:14px;font-size:13px;margin-bottom:14px;">
+                <strong style="color:var(--green);">✓ Sync aktiv</strong><br>
+                <span id="syncStatusText" style="font-size:12px;color:var(--muted);">-</span>
+            </div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Auf einem zweiten Gerät: Einfach denselben Token einfügen — der bestehende Gist wird automatisch erkannt und geladen.</p>
+            <div style="display:flex;gap:10px;justify-content:space-between;">
+                <button class="um-btn" onclick="window.GistSync.disconnect()" style="color:var(--red);border-color:#ffcdd2;">Trennen</button>
+                <button class="um-btn um-btn-primary" id="syncPushNowBtn">Jetzt synchronisieren</button>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 
 <!-- Navigation -->
@@ -1079,11 +1121,12 @@
 </div><!-- /appContent -->
 
 <!-- JS Module — Reihenfolge ist wichtig:
-     defaults → storage → backup → editor → auth → calc → umbau → app -->
+     defaults → storage → backup → editor → gist-sync → auth → calc → umbau → app -->
 <script src="js/data-defaults.js"></script>
 <script src="js/storage.js"></script>
 <script src="js/backup.js"></script>
 <script src="js/editor.js"></script>
+<script src="js/gist-sync.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/calc.js"></script>
 <script src="js/umbau.js"></script>

@@ -43,9 +43,18 @@
     function saveState(state) {
         try {
             localStorage.setItem(STATE_KEY, JSON.stringify(state));
+            triggerSync();
         } catch (e) {
             console.error('[storage] State konnte nicht gespeichert werden:', e);
             alert('Speichern fehlgeschlagen: ' + e.message);
+        }
+    }
+
+    function triggerSync() {
+        // Wenn das Gist-Sync-Modul geladen ist und ein Token existiert,
+        // wird ein debounced Push zum Gist ausgelöst.
+        if (window.GistSync && window.GistSync.isConnected && window.GistSync.isConnected()) {
+            window.GistSync.schedulePush();
         }
     }
 

@@ -210,6 +210,9 @@ function umbauInit() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(measures));
         renderTable();
         renderKPIs();
+        if (window.GistSync && window.GistSync.isConnected && window.GistSync.isConnected()) {
+            window.GistSync.schedulePush();
+        }
     }
 
     function renderKPIs() {

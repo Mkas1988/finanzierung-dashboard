@@ -2,7 +2,9 @@
 
 Single-Page-Webapp zur Übersicht der Hausfinanzierung Herbrüggenbusch 39, Essen.
 
-**⚠️ Privates Repository.** Enthält reale Finanzdaten (Adresse, Brutto-Einkommen, Kreditsummen, Passwort-Hash). Nicht öffentlich machen.
+**Live-URL:** https://mkas1988.github.io/finanzierung-dashboard/
+
+**⚠️ Hinweis:** Repository ist öffentlich, weil GitHub Pages nur bei public Repos im Free-Plan verfügbar ist. Der Quelltext (inkl. der hardcoded Default-Werte) ist damit für jeden lesbar. Die UI selbst ist durch ein SHA-256-Passwort geschützt.
 
 ## Aufbau
 
