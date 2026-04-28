@@ -1,0 +1,15 @@
+.DS_Store
+.idea/
+.vscode/
+*.log
+node_modules/
+
+# Persönliche Backup-Dateien (lokal exportiert)
+finanzierung-backup-*.json
+data/local-*.json
+
+# Tokens / Secrets — NIEMALS einchecken
+.env
+.env.local
+*.token
+*.secret
